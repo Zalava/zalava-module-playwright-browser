@@ -1,22 +1,22 @@
 package org.zalava.modules.playwright;
 
-import org.zalava.SeaVerificationContributor;
-import org.zalava.SeaVerificationDescriptor;
-import org.zalava.SeaVerificationStep;
+import org.zalava.ZalavaVerificationContributor;
+import org.zalava.ZalavaVerificationDescriptor;
+import org.zalava.ZalavaVerificationStep;
 
 import java.util.List;
 import java.util.Map;
 
-final class PlaywrightBrowserVerificationContributor implements SeaVerificationContributor {
+final class PlaywrightBrowserVerificationContributor implements ZalavaVerificationContributor {
     @Override
-    public List<SeaVerificationDescriptor> verifications() {
-        return List.of(new SeaVerificationDescriptor("web-browser", "playwright-browser",
+    public List<ZalavaVerificationDescriptor> verifications() {
+        return List.of(new ZalavaVerificationDescriptor("web-browser", "playwright-browser",
                 List.of("navigateTo", "getText", "closeBrowser"), List.of(
-                        SeaVerificationStep.toolInvocation("Open a stable page", "playwright-browser", "navigateTo", true, false,
+                        ZalavaVerificationStep.toolInvocation("Open a stable page", "playwright-browser", "navigateTo", true, false,
                                 Map.of("actorId", "bootstrap-verification", "arguments", Map.of("url", "https://example.com"))),
-                        SeaVerificationStep.toolInvocation("Read the page heading", "playwright-browser", "getText", false, false,
+                        ZalavaVerificationStep.toolInvocation("Read the page heading", "playwright-browser", "getText", false, false,
                                 Map.of("actorId", "bootstrap-verification", "arguments", Map.of("selector", "h1"))),
-                        SeaVerificationStep.toolInvocation("Close the browser session", "playwright-browser", "closeBrowser", true, false,
+                        ZalavaVerificationStep.toolInvocation("Close the browser session", "playwright-browser", "closeBrowser", true, false,
                                 Map.of("actorId", "bootstrap-verification", "arguments", Map.of()))
                 )));
     }
