@@ -1,0 +1,38 @@
+schemaVersion: 1
+modules:
+  - moduleId: zalava-module-playwright-browser
+    version: 0.1.0-alpha.1
+    displayName: Playwright Browser
+    description: Provider-scoped browser automation backed by Playwright for Java.
+    supportUrl: https://github.com/Zalava/zalava-module-playwright-browser
+    artifact:
+      groupId: org.zalava.modules
+      artifactId: zalava-module-playwright-browser
+      version: 0.1.0-alpha.1
+    source:
+      repository: https://github.com/Zalava/zalava-module-playwright-browser.git
+      license: Apache-2.0
+    build:
+      command: ["./gradlew", "build"]
+      verificationCommand: ["./gradlew", "test"]
+    compatibility:
+      seaRuntime: ">=1.0.0 <2.0.0"
+    configurationSchema:
+      type: object
+      additionalProperties: false
+      properties:
+        playwright-browser-factory:
+          type: object
+          additionalProperties: false
+          properties:
+            headless:
+              type: boolean
+    factories:
+      - factoryId: playwright-browser-factory
+        providerType: web-browser
+    services:
+      provided: []
+      required: []
+    operations: []
+    security:
+      permissions: [network, browser-automation]
