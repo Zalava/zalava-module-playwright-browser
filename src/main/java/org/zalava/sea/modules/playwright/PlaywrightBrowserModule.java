@@ -3,14 +3,14 @@ package org.zalava.modules.playwright;
 import org.zalava.ModuleConfigurationDescriptor;
 import org.zalava.ModuleDescriptor;
 import org.zalava.ProviderFactory;
-import org.zalava.SeaModule;
-import org.zalava.SeaVerificationContributor;
+import org.zalava.ZalavaModule;
+import org.zalava.ZalavaVerificationContributor;
 
 import java.util.List;
 import java.util.Map;
 
 /** External, provider-scoped browser automation module. */
-public final class PlaywrightBrowserModule implements SeaModule {
+public final class PlaywrightBrowserModule implements ZalavaModule {
 
     public static final String MODULE_ID = "zalava-module-playwright-browser";
     static final String FACTORY_ID = "playwright-browser-factory";
@@ -50,7 +50,7 @@ public final class PlaywrightBrowserModule implements SeaModule {
     }
 
     @Override
-    public List<SeaVerificationContributor> verificationContributors() {
+    public List<ZalavaVerificationContributor> verificationContributors() {
         return List.of(new PlaywrightBrowserVerificationContributor());
     }
 }

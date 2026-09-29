@@ -3,25 +3,25 @@ package org.zalava.modules.playwright;
 import org.zalava.InvocationContext;
 import org.zalava.ProviderCapabilities;
 import org.zalava.ProviderDescriptor;
-import org.zalava.SeaOperationResult;
-import org.zalava.SeaProvider;
-import org.zalava.SeaToolDescriptor;
-import org.zalava.SeaToolInputSchemas;
+import org.zalava.ZalavaOperationResult;
+import org.zalava.ZalavaProvider;
+import org.zalava.ZalavaToolDescriptor;
+import org.zalava.ZalavaToolInputSchemas;
 
 import java.util.List;
 import java.util.Map;
 import tools.jackson.databind.JsonNode;
 
-final class PlaywrightBrowserProvider implements SeaProvider {
+final class PlaywrightBrowserProvider implements ZalavaProvider {
 
-    private static final List<SeaToolDescriptor> TOOLS = List.of(
-            tool("navigateTo", "Navigate to a URL and return title plus page text.", true, Map.of("url", SeaToolInputSchemas.string()), "url"),
-            tool("clickElement", "Click an element matching a CSS selector.", true, Map.of("selector", SeaToolInputSchemas.string()), "selector"),
-            tool("fillInput", "Fill an input field matching a CSS selector.", true, Map.of("selector", SeaToolInputSchemas.string(), "value", SeaToolInputSchemas.string()), "selector"),
-            tool("getText", "Extract text content from elements matching a CSS selector.", false, Map.of("selector", SeaToolInputSchemas.string())),
+    private static final List<ZalavaToolDescriptor> TOOLS = List.of(
+            tool("navigateTo", "Navigate to a URL and return title plus page text.", true, Map.of("url", ZalavaToolInputSchemas.string()), "url"),
+            tool("clickElement", "Click an element matching a CSS selector.", true, Map.of("selector", ZalavaToolInputSchemas.string()), "selector"),
+            tool("fillInput", "Fill an input field matching a CSS selector.", true, Map.of("selector", ZalavaToolInputSchemas.string(), "value", ZalavaToolInputSchemas.string()), "selector"),
+            tool("getText", "Extract text content from elements matching a CSS selector.", false, Map.of("selector", ZalavaToolInputSchemas.string())),
             tool("takeScreenshot", "Take a full-page screenshot.", true, Map.of()),
-            tool("evaluateJavaScript", "Evaluate JavaScript in the current page context.", true, Map.of("expression", SeaToolInputSchemas.string()), "expression"),
-            tool("waitForSelector", "Wait for an element matching a CSS selector to become visible.", false, Map.of("selector", SeaToolInputSchemas.string(), "timeoutMs", SeaToolInputSchemas.integer()), "selector"),
+            tool("evaluateJavaScript", "Evaluate JavaScript in the current page context.", true, Map.of("expression", ZalavaToolInputSchemas.string()), "expression"),
+            tool("waitForSelector", "Wait for an element matching a CSS selector to become visible.", false, Map.of("selector", ZalavaToolInputSchemas.string(), "timeoutMs", ZalavaToolInputSchemas.integer()), "selector"),
             tool("closeBrowser", "Close the browser session and release resources.", true, Map.of())
     );
 
@@ -39,10 +39,10 @@ final class PlaywrightBrowserProvider implements SeaProvider {
 
     @Override public ProviderDescriptor descriptor() { return descriptor; }
     @Override public ProviderCapabilities capabilities() { return descriptor.capabilities(); }
-    @Override public List<SeaToolDescriptor> listTools() { return TOOLS; }
+    @Override public List<ZalavaToolDescriptor> listTools() { return TOOLS; }
 
     @Override
-    public SeaOperationResult callTool(String toolName, JsonNode arguments, InvocationContext context) {
+    public ZalavaOperationResult callTool(String toolName, JsonNode arguments, InvocationContext context) {
         try {
             String result = switch (toolName) {
                 case "navigateTo" -> client.navigateTo(required(arguments, "url"));
@@ -55,21 +55,21 @@ final class PlaywrightBrowserProvider implements SeaProvider {
                 case "closeBrowser" -> client.closeBrowser();
                 default -> throw new IllegalArgumentException("Unknown browser tool: " + toolName);
             };
-            return new SeaOperationResult(true, Map.of("operation", toolName, "result", result), metadata());
+            return new ZalavaOperationResult(true, Map.of("operation", toolName, "result", result), metadata());
         } catch (BrowserOperationException ex) {
-            return new SeaOperationResult(false, Map.of("code", "BROWSER_OPERATION_FAILED", "operation", toolName), metadata());
+            return new ZalavaOperationResult(false, Map.of("code", "BROWSER_OPERATION_FAILED", "operation", toolName), metadata());
         }
     }
 
     @Override public void close() { client.close(); }
 
-    private static SeaToolDescriptor tool(String name, String description, boolean sideEffecting,
+    private static ZalavaToolDescriptor tool(String name, String description, boolean sideEffecting,
                                           Map<String, Object> properties, String... required) {
         List<String> tags = sideEffecting
                 ? List.of("sea_backed", "web-browser", "network", "browser-session", "mutating")
                 : List.of("sea_backed", "web-browser", "network", "browser-session");
-        return new SeaToolDescriptor(name, description, sideEffecting, tags,
-                SeaToolInputSchemas.object(properties, required));
+        return new ZalavaToolDescriptor(name, description, sideEffecting, tags,
+                ZalavaToolInputSchemas.object(properties, required));
     }
 
     private static String required(JsonNode arguments, String fieldName) {

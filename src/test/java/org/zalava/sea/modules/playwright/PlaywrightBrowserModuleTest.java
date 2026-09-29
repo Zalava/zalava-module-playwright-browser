@@ -12,10 +12,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
-import org.zalava.SeaModule;
-import org.zalava.SeaOperationResult;
-import org.zalava.SeaProvider;
-import org.zalava.SeaToolDescriptor;
+import org.zalava.ZalavaModule;
+import org.zalava.ZalavaOperationResult;
+import org.zalava.ZalavaProvider;
+import org.zalava.ZalavaToolDescriptor;
 import org.zalava.testing.ConfigFixture;
 import org.zalava.testing.ModuleContractKit;
 import org.zalava.testing.ProviderFixture;
@@ -86,10 +86,10 @@ class PlaywrightBrowserModuleTest {
     @Test
     void createsTheConfiguredProviderAndDeclaresItsTools() {
         try (ProviderFixture providers = kit.providers(configuration(true))) {
-            SeaProvider provider = providers.requireProvider(PROVIDER_ID);
+            ZalavaProvider provider = providers.requireProvider(PROVIDER_ID);
             assertThat(provider.descriptor().moduleId()).isEqualTo(MODULE_ID);
             assertThat(provider.descriptor().providerType()).isEqualTo("web-browser");
-            assertThat(provider.listTools().stream().map(SeaToolDescriptor::name)).containsExactly(
+            assertThat(provider.listTools().stream().map(ZalavaToolDescriptor::name)).containsExactly(
                     "navigateTo", "clickElement", "fillInput", "getText", "takeScreenshot",
                     "evaluateJavaScript", "waitForSelector", "closeBrowser");
             assertThat(provider.listTools()).filteredOn(tool -> tool.name().equals("getText")).singleElement()
@@ -104,7 +104,7 @@ class PlaywrightBrowserModuleTest {
     @Test
     void rejectsMissingAndUnknownToolsBeforeTouchingTheBrowser() {
         try (ProviderFixture providers = kit.providers(configuration(true))) {
-            SeaProvider provider = providers.requireProvider(PROVIDER_ID);
+            ZalavaProvider provider = providers.requireProvider(PROVIDER_ID);
             assertThatThrownBy(() -> providers.invoke(PROVIDER_ID, "navigateTo", arguments()))
                     .isInstanceOf(IllegalArgumentException.class).hasMessage("url is required");
             assertThatThrownBy(() -> provider.callTool("unknown", arguments(), org.zalava.InvocationContext.system()))
@@ -117,11 +117,11 @@ class PlaywrightBrowserModuleTest {
         RecordingBrowserSessions sessions = new RecordingBrowserSessions(classLoader());
         try (ModuleContractKit injected = ModuleContractKit.of(injectedModule(sessions))) {
             try (ProviderFixture providers = injected.providers(configuration(false))) {
-                SeaOperationResult navigate = providers.invoke(PROVIDER_ID, "navigateTo",
+                ZalavaOperationResult navigate = providers.invoke(PROVIDER_ID, "navigateTo",
                         arguments().put("url", "https://example.com"));
-                SeaOperationResult fill = providers.invoke(PROVIDER_ID, "fillInput",
+                ZalavaOperationResult fill = providers.invoke(PROVIDER_ID, "fillInput",
                         arguments().put("selector", "#query").put("value", "sea"));
-                SeaOperationResult wait = providers.invoke(PROVIDER_ID, "waitForSelector",
+                ZalavaOperationResult wait = providers.invoke(PROVIDER_ID, "waitForSelector",
                         arguments().put("selector", "main").put("timeoutMs", 250));
 
                 assertThat(navigate.success()).isTrue();
@@ -141,7 +141,7 @@ class PlaywrightBrowserModuleTest {
         sessions.failNavigation = true;
         try (ModuleContractKit injected = ModuleContractKit.of(injectedModule(sessions))) {
             try (ProviderFixture providers = injected.providers(configuration(true))) {
-                SeaOperationResult result = providers.invoke(PROVIDER_ID, "navigateTo",
+                ZalavaOperationResult result = providers.invoke(PROVIDER_ID, "navigateTo",
                         arguments().put("url", "https://example.com"));
 
                 assertThat(result.success()).isFalse();
@@ -156,7 +156,7 @@ class PlaywrightBrowserModuleTest {
         return kit.module().getClass().getClassLoader();
     }
 
-    private SeaModule injectedModule(RecordingBrowserSessions sessions) throws Exception {
+    private ZalavaModule injectedModule(RecordingBrowserSessions sessions) throws Exception {
         ClassLoader loader = classLoader();
         Class<?> clientFactoryType = Class.forName(CLIENT_FACTORY_TYPE, true, loader);
         sessions.initialize(
@@ -166,7 +166,7 @@ class PlaywrightBrowserModuleTest {
         Class<?> moduleType = Class.forName(MODULE_CLASS, true, loader);
         Constructor<?> constructor = moduleType.getDeclaredConstructor(clientFactoryType);
         constructor.setAccessible(true);
-        return (SeaModule) constructor.newInstance(factory);
+        return (ZalavaModule) constructor.newInstance(factory);
     }
 
     private static ConfigFixture configuration(boolean headless) {

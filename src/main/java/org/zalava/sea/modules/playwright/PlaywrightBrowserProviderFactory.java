@@ -3,7 +3,7 @@ package org.zalava.modules.playwright;
 import org.zalava.ProviderFactory;
 import org.zalava.ProviderFactoryContext;
 import org.zalava.ProviderFactoryDescriptor;
-import org.zalava.SeaProvider;
+import org.zalava.ZalavaProvider;
 
 import java.util.List;
 
@@ -23,7 +23,7 @@ final class PlaywrightBrowserProviderFactory implements ProviderFactory {
     }
 
     @Override
-    public List<SeaProvider> createProviders(ProviderFactoryContext context) {
+    public List<ZalavaProvider> createProviders(ProviderFactoryContext context) {
         Object configured = context.configuration().get("headless");
         boolean headless = !(configured instanceof Boolean value) || value;
         return List.of(new PlaywrightBrowserProvider(clientFactory.create(headless)));
