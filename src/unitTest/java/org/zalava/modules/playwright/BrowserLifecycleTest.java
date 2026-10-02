@@ -7,7 +7,7 @@ import com.microsoft.playwright.*;
 import java.nio.file.Files;
 import java.util.*;
 import org.junit.jupiter.api.Test;
-import org.zalava.*;
+import org.zalava.api.*;
 import tools.jackson.databind.json.JsonMapper;
 
 class BrowserLifecycleTest {
@@ -116,7 +116,17 @@ class BrowserLifecycleTest {
             "takeScreenshot",
             "evaluateJavaScript",
             "closeBrowser")) {
-      assertThat(provider.callTool(operation, arguments, InvocationContext.system()).success())
+      assertThat(
+              provider
+                  .callTool(
+                      operation,
+                      new tools.jackson.databind.json.JsonMapper()
+                          .convertValue(
+                              arguments,
+                              new tools.jackson.core.type.TypeReference<
+                                  java.util.Map<String, Object>>() {}),
+                      InvocationContext.system())
+                  .success())
           .isTrue();
     }
     verify(client).closeBrowser();
@@ -132,27 +142,53 @@ class BrowserLifecycleTest {
             "navigateTo", "clickElement", "fillInput", "evaluateJavaScript", "waitForSelector")) {
       assertThatThrownBy(
               () ->
-                  provider.callTool(operation, json.createObjectNode(), InvocationContext.system()))
+                  provider.callTool(
+                      operation,
+                      new tools.jackson.databind.json.JsonMapper()
+                          .convertValue(
+                              json.createObjectNode(),
+                              new tools.jackson.core.type.TypeReference<
+                                  java.util.Map<String, Object>>() {}),
+                      InvocationContext.system()))
           .isInstanceOf(IllegalArgumentException.class);
       assertThatThrownBy(
               () ->
                   provider.callTool(
                       operation,
-                      json.createObjectNode()
-                          .put("url", " ")
-                          .put("selector", " ")
-                          .put("expression", " "),
+                      new tools.jackson.databind.json.JsonMapper()
+                          .convertValue(
+                              json.createObjectNode()
+                                  .put("url", " ")
+                                  .put("selector", " ")
+                                  .put("expression", " "),
+                              new tools.jackson.core.type.TypeReference<
+                                  java.util.Map<String, Object>>() {}),
                       InvocationContext.system()))
           .isInstanceOf(IllegalArgumentException.class);
     }
     assertThatThrownBy(
-            () -> provider.callTool("unknown", json.createObjectNode(), InvocationContext.system()))
+            () ->
+                provider.callTool(
+                    "unknown",
+                    new tools.jackson.databind.json.JsonMapper()
+                        .convertValue(
+                            json.createObjectNode(),
+                            new tools.jackson.core.type.TypeReference<
+                                java.util.Map<String, Object>>() {}),
+                    InvocationContext.system()))
         .isInstanceOf(IllegalArgumentException.class);
     when(client.getText(anyString()))
         .thenThrow(new BrowserOperationException("getText", new IllegalStateException("broken")));
     assertThat(
             provider
-                .callTool("getText", json.createObjectNode(), InvocationContext.system())
+                .callTool(
+                    "getText",
+                    new tools.jackson.databind.json.JsonMapper()
+                        .convertValue(
+                            json.createObjectNode(),
+                            new tools.jackson.core.type.TypeReference<
+                                java.util.Map<String, Object>>() {}),
+                    InvocationContext.system())
                 .success())
         .isFalse();
     when(client.waitForSelector("button", 5000)).thenReturn("ready");
@@ -160,7 +196,11 @@ class BrowserLifecycleTest {
             provider
                 .callTool(
                     "waitForSelector",
-                    json.createObjectNode().put("selector", "button").put("timeoutMs", -1),
+                    new tools.jackson.databind.json.JsonMapper()
+                        .convertValue(
+                            json.createObjectNode().put("selector", "button").put("timeoutMs", -1),
+                            new tools.jackson.core.type.TypeReference<
+                                java.util.Map<String, Object>>() {}),
                     InvocationContext.system())
                 .success())
         .isTrue();

@@ -15,13 +15,13 @@ import java.util.function.Supplier;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.zalava.ZalavaModule;
-import org.zalava.ZalavaOperationResult;
-import org.zalava.ZalavaProvider;
-import org.zalava.ZalavaToolDescriptor;
-import org.zalava.testing.ConfigFixture;
-import org.zalava.testing.ModuleContractKit;
-import org.zalava.testing.ProviderFixture;
+import org.zalava.api.ZalavaModule;
+import org.zalava.api.ZalavaOperationResult;
+import org.zalava.api.ZalavaProvider;
+import org.zalava.api.ZalavaToolDescriptor;
+import org.zalava.api.testing.ConfigFixture;
+import org.zalava.api.testing.ModuleContractKit;
+import org.zalava.api.testing.ProviderFixture;
 import tools.jackson.databind.node.JsonNodeFactory;
 import tools.jackson.databind.node.ObjectNode;
 
@@ -126,12 +126,28 @@ class PlaywrightBrowserModuleTest {
   void rejectsMissingAndUnknownToolsBeforeTouchingTheBrowser() {
     try (ProviderFixture providers = kit.providers(configuration(true))) {
       ZalavaProvider provider = providers.requireProvider(PROVIDER_ID);
-      assertThatThrownBy(() -> providers.invoke(PROVIDER_ID, "navigateTo", arguments()))
+      assertThatThrownBy(
+              () ->
+                  providers.invoke(
+                      PROVIDER_ID,
+                      "navigateTo",
+                      new tools.jackson.databind.json.JsonMapper()
+                          .convertValue(
+                              arguments(),
+                              new tools.jackson.core.type.TypeReference<
+                                  java.util.Map<String, Object>>() {})))
           .isInstanceOf(IllegalArgumentException.class)
           .hasMessage("url is required");
       assertThatThrownBy(
               () ->
-                  provider.callTool("unknown", arguments(), org.zalava.InvocationContext.system()))
+                  provider.callTool(
+                      "unknown",
+                      new tools.jackson.databind.json.JsonMapper()
+                          .convertValue(
+                              arguments(),
+                              new tools.jackson.core.type.TypeReference<
+                                  java.util.Map<String, Object>>() {}),
+                      org.zalava.api.InvocationContext.system()))
           .isInstanceOf(IllegalArgumentException.class)
           .hasMessage("Unknown browser tool: unknown");
     }
@@ -145,17 +161,31 @@ class PlaywrightBrowserModuleTest {
       try (ProviderFixture providers = injected.providers(configuration(false))) {
         ZalavaOperationResult navigate =
             providers.invoke(
-                PROVIDER_ID, "navigateTo", arguments().put("url", "https://example.com"));
+                PROVIDER_ID,
+                "navigateTo",
+                new tools.jackson.databind.json.JsonMapper()
+                    .convertValue(
+                        arguments().put("url", "https://example.com"),
+                        new tools.jackson.core.type.TypeReference<
+                            java.util.Map<String, Object>>() {}));
         ZalavaOperationResult fill =
             providers.invoke(
                 PROVIDER_ID,
                 "fillInput",
-                arguments().put("selector", "#query").put("value", "sea"));
+                new tools.jackson.databind.json.JsonMapper()
+                    .convertValue(
+                        arguments().put("selector", "#query").put("value", "sea"),
+                        new tools.jackson.core.type.TypeReference<
+                            java.util.Map<String, Object>>() {}));
         ZalavaOperationResult wait =
             providers.invoke(
                 PROVIDER_ID,
                 "waitForSelector",
-                arguments().put("selector", "main").put("timeoutMs", 250));
+                new tools.jackson.databind.json.JsonMapper()
+                    .convertValue(
+                        arguments().put("selector", "main").put("timeoutMs", 250),
+                        new tools.jackson.core.type.TypeReference<
+                            java.util.Map<String, Object>>() {}));
 
         assertThat(navigate.success()).isTrue();
         assertThat(fill.content())
@@ -177,7 +207,13 @@ class PlaywrightBrowserModuleTest {
       try (ProviderFixture providers = injected.providers(configuration(true))) {
         ZalavaOperationResult result =
             providers.invoke(
-                PROVIDER_ID, "navigateTo", arguments().put("url", "https://example.com"));
+                PROVIDER_ID,
+                "navigateTo",
+                new tools.jackson.databind.json.JsonMapper()
+                    .convertValue(
+                        arguments().put("url", "https://example.com"),
+                        new tools.jackson.core.type.TypeReference<
+                            java.util.Map<String, Object>>() {}));
 
         assertThat(result.success()).isFalse();
         assertThat(result.content())

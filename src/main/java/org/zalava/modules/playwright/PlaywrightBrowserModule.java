@@ -2,11 +2,11 @@ package org.zalava.modules.playwright;
 
 import java.util.List;
 import java.util.Map;
-import org.zalava.ModuleConfigurationDescriptor;
-import org.zalava.ModuleDescriptor;
-import org.zalava.ProviderFactory;
-import org.zalava.ZalavaModule;
-import org.zalava.ZalavaVerificationContributor;
+import org.zalava.api.ModuleConfigurationDescriptor;
+import org.zalava.api.ModuleDescriptor;
+import org.zalava.api.ProviderFactory;
+import org.zalava.api.ZalavaModule;
+import org.zalava.api.ZalavaVerificationContributor;
 
 /** External, provider-scoped browser automation module. */
 public final class PlaywrightBrowserModule implements ZalavaModule {

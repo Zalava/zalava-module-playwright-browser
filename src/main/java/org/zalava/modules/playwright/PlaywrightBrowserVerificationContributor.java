@@ -2,9 +2,9 @@ package org.zalava.modules.playwright;
 
 import java.util.List;
 import java.util.Map;
-import org.zalava.ZalavaVerificationContributor;
-import org.zalava.ZalavaVerificationDescriptor;
-import org.zalava.ZalavaVerificationStep;
+import org.zalava.api.ZalavaVerificationContributor;
+import org.zalava.api.ZalavaVerificationDescriptor;
+import org.zalava.api.ZalavaVerificationStep;
 
 final class PlaywrightBrowserVerificationContributor implements ZalavaVerificationContributor {
   @Override
