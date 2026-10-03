@@ -72,7 +72,7 @@ final class PlaywrightBrowserClient implements BrowserClient {
     return execute(
         "takeScreenshot",
         () -> {
-          Path screenshot = Files.createTempFile("sea-playwright-screenshot-", ".png");
+          Path screenshot = Files.createTempFile("zalava-playwright-screenshot-", ".png");
           page().screenshot(new Page.ScreenshotOptions().setPath(screenshot).setFullPage(true));
           return "Screenshot saved.";
         });

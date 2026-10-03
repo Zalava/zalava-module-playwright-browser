@@ -29,7 +29,7 @@ import tools.jackson.databind.node.ObjectNode;
  * Exercises the real built module JAR at the stable {@code module-api} boundary through the
  * released contract kit. Provider behavior is asserted against an injected browser-client double so
  * no real browser is launched; host-owned resolution, permissions and persistence stay covered by
- * SEA.
+ * Zalava.
  */
 class PlaywrightBrowserModuleTest {
 
