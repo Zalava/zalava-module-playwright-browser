@@ -71,7 +71,7 @@ final class PlaywrightBrowserProvider implements ZalavaProvider {
           "Provider-scoped browser automation backed by Playwright for Java.",
           ModuleVersion.VALUE,
           ProviderCapabilities.toolsOnly(),
-          List.of("sea_backed", "web-browser", "network", "browser-session"),
+          List.of("zalava_backed", "web-browser", "network", "browser-session"),
           Map.of("engine", "playwright"));
 
   PlaywrightBrowserProvider(BrowserClient client) {
@@ -136,8 +136,8 @@ final class PlaywrightBrowserProvider implements ZalavaProvider {
       String... required) {
     List<String> tags =
         sideEffecting
-            ? List.of("sea_backed", "web-browser", "network", "browser-session", "mutating")
-            : List.of("sea_backed", "web-browser", "network", "browser-session");
+            ? List.of("zalava_backed", "web-browser", "network", "browser-session", "mutating")
+            : List.of("zalava_backed", "web-browser", "network", "browser-session");
     return new ZalavaToolDescriptor(
         name,
         description,
