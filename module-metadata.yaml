@@ -1,14 +1,14 @@
 schemaVersion: 1
 modules:
   - moduleId: zalava-module-playwright-browser
-    version: 0.1.0-alpha.3
+    version: 0.1.0-alpha.4
     displayName: Playwright Browser
     description: Provider-scoped browser automation backed by Playwright for Java.
     supportUrl: https://github.com/Zalava/zalava-module-playwright-browser
     artifact:
       groupId: org.zalava.modules
       artifactId: zalava-module-playwright-browser
-      version: 0.1.0-alpha.3
+      version: 0.1.0-alpha.4
     source:
       repository: https://github.com/Zalava/zalava-module-playwright-browser.git
       license: Apache-2.0
