@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "moduleId": "zalava-module-playwright-browser",
+  "releases": [
+    {
+      "version": "0.1.0-alpha.4",
+      "releaseTag": "v0.1.0-alpha.4",
+      "artifact": {
+        "groupId": "org.zalava.modules",
+        "artifactId": "zalava-module-playwright-browser",
+        "version": "0.1.0-alpha.4",
+        "sha256": "23e05087dd8cd4d5e9416323c7160d88353b0e3f2212ba628173e3453a9ec53c",
+        "type": "github-release-assets",
+        "repositoryUri": "https://github.com/Zalava/zalava-module-playwright-browser",
+        "releaseTag": "v0.1.0-alpha.4",
+        "assetName": "zalava-module-playwright-browser-0.1.0-alpha.4.jar"
+      },
+      "artifactBundle": false,
+      "source": {
+        "repository": "https://github.com/Zalava/zalava-module-playwright-browser.git",
+        "revision": "551ff4ec53f350b4e9d885d0068f3bd2794ef360",
+        "license": "Apache-2.0"
+      },
+      "compatibility": {
+        "zalavaRuntime": ">=1.0.0 <2.0.0"
+      },
+      "security": {
+        "permissions": [
+          "network",
+          "browser-automation"
+        ]
+      }
+    }
+  ]
+}
